@@ -8,7 +8,7 @@ function App() {
     const [city, setCity] = useState("")
   
     const getWeather = (event) =>{
-        if(event.key == "Enter") {
+        if(event.key === "Enter") {
             fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=${apiKey}`).then(
                 response => response.json()
             ).then(
@@ -30,16 +30,28 @@ function App() {
             onKeyPress={getWeather} />
 
             {typeof weatherData.main === 'undefined' ? (
-                <div>
+                <div className='weather-data'>
                     <p>Welcome to my weather app! Enter a city to get the weather info.</p>
                 </div>):
                 (
-                    <div>
-                        <p>{weatherData.name}</p>
-                        <p>{Math.round(weatherData.main.temp)}°C</p>
-                        <p>{weatherData.weather[0].main}</p>
+                    <div className='weather-data'>
+                        <p className='city'>{weatherData.name}</p>
+                        <p className='temperature'>{Math.round(weatherData.main.temp)} °C</p>
+                        <div className='row-format'>
+                            <p className='weather-type'>{weatherData.weather[0].main}</p>
+                            <img src={"http://openweathermap.org/img/w/" + weatherData.weather[0].icon + ".png" } alt="weatherDescIcon"/>
+                        </div>
                     </div>
-                )}
+                )
+            }
+
+            {weatherData.cod === "404" ? (
+                <div className='weather-data'>
+                    <p className='city'>City not found. Check spelling.</p>
+                </div>
+            ):(
+               <></> 
+            )}
         </div>
     )
 }
